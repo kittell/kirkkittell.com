@@ -1,11 +1,20 @@
-<html>
-  <head>
-    <title>kirkkittell.com / story / 2026-01-06</title>
-  </head>
-  <body>
-    <h1>2026-01-06</h1>
-    <article class="story" id="2026-01-06_01">
-      <h2>RSS</h2>
+<?xml version="1.0" encoding="UTF-8" ?>
+<rss version="2.0"
+     xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>Kirk Kittell</title>
+    <link>https://www.kirkkittell.com/</link>
+    <description>kirkkittell.com</description>
+    <language>en-us</language>
+    <lastBuildDate>Tue, 06 Jan 2026 19:39:00 CST</lastBuildDate>
+
+    <item>
+      <title>Your Most Recent Post Title</title>
+      <link>https://www.kirkkittell.com/story/2026-01-06.html#2026-01-06_01</link>
+      <guid>https://www.kirkkittell.com/story/2026-01-06.html#2026-01-06_01</guid>
+      <pubDate>Mon, 05 Jan 2026 14:00:00 CST</pubDate>
+      <content:encoded><![CDATA[
+<h2>RSS</h2>
       <p>A few notes after reading: Dave Winer, "<a href="http://scripting.com/2025/12/14/142421.html?title=aReallySimpleSocialWeb">A Really Simple social web</a>", <em>Scripting News</em> (2025-12-14)</p>
       <p>Since I started writing again (occasionally, intermittently, &c.) last year, I've just been doing a straight HTML (+ CSS + JavaScript) website. The impetus for that was fairly simple: I had been paying a lot for web hosting over the years and I stopped doing that entirely. I think the folks at <a hr3ef="https://www.siteground.com">SiteGround</a> did a good job, but spending the money was a hard sell at home.</p>
       <p>Incidentally, I also like the attitude of running a site in plain HTML again&mdash;it's just like the 90s again. And I'm one of those people who yells at clouds about how the web used to be Good&mdash;well, if not Good like the quality of the web sites was good, but at least it was Nice. Maybe it was because everyone wasn't online yet, so the network effect of so many people yelling at each other hadn't been activated yet. I'm sure that's part of it. But also there was friction involved in creating and maintaining a site. If nothing else, some of the effort that could otherwise be spent on yelling had to be spent on doing what is now handled by Someone Else, some social media company or WordPress as a backend or whatever.</p>
@@ -15,6 +24,10 @@
       <p>So, here it is again: <a href="http://www.kirkkittell.com/rss.xml">kirkkittell.com/rss.xml</a>.</p>
       <p>One day I might automate some of this site&mdash;something that will allow easy changing of all the post templates, for example, or copying over HTML blog post articles into the RSS file. Or maybe not. I don't know. There's <em>something</em> satisfying about doing things the difficult, contrarian way, but maybe that's just my problems talking. In the meanwhile I'm going to copy and paste the text, just as Nature intended.</p>
       <p>Related, I guess: this many years later, it's still irritating that Google killed Google Reader... but I didn't realize it was all the way back in 2013 that it got axed. (David Pierce, "<a href="https://www.theverge.com/23778253/google-reader-death-2013-rss-social">Who killed Google Reader?</a>", <em>The Verge</em> (2023-06-30)). I use Feedly's <a href="https://feedly.com/news-reader">News Reader</a> now, which is probably the closest in spirit to Google Reader, but there will always be a Google Reader sized hole out there.</p>
-    </article>
-  </body>
-</html>
+      ]]></content:encoded>
+    </item>
+
+    <!-- Add more <item> blocks for each post -->
+
+  </channel>
+</rss>

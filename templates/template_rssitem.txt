@@ -1,0 +1,9 @@
+<item>
+      <title>Your Most Recent Post Title</title>
+      <link>https://www.kirkkittell.com/story/YYYY-MM-DD.html#YYYY-MM-DD_01</link>
+      <guid>https://www.kirkkittell.com/story/YYYY-MM-DD.html#YYYY-MM-DD_01</guid>
+      <pubDate>Mon, 05 Jan 2026 14:00:00 CST</pubDate>
+      <content:encoded><![CDATA[
+
+      ]]></content:encoded>
+    </item>
