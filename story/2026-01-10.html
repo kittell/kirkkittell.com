@@ -7,6 +7,12 @@
     <article class="story" id="2026-01-10_01">
       <h2>Graphs, Pandemic 2</h2>
       <p>Previously: <a href="2026-01-03.html#2026-01-03_01">Graphs, Pandemic</a> (2026-01-03)</p>
+      <p>I played around a little in Python and made a graph of the Pandemic game board, complete with all the nodes (cities) and edges (city-to-city paths).</p>
+      <p>Code: <a href="https://github.com/kittell/kirkkittell.com/blob/main/story/attachments/2026-01-10/pandemic_graph.py">pandemic_graph.py</a>. It's not fancy. It just reads in a .csv file with a list of all cities (and their associated colors) and another .csv file that has the two cities that comprise an edge (path between cities). Then <a href="https://networkx.org/en/">NetworkX</a> builds the graph.</p>
+      <p>So, I'll put that graph through its paces later to see what I can learn about the gameboard. Wildly unnecessary, I'm just curious. I feel like there's a way to make a game like this that can build a different sized graph (different set of cities, different connections, etc.) if the (theoretical) player wants to. Again, not necessary, but a toy to play with to see how things work. I don't think I'd ever take it that far, but it ought to be possible to simulate different game plays.</p>
+      <p>Beyond analysis, pictures are worth at least a few words:</p>
+      <img src="../story/attachments/2026-01-10/pandemic_graph.png" />
+      <p>Back in the day, I used to be able to make a more interesting graph output using NetworkX&mdash;maybe using GraphViz somehow?</p>
     </article>
   </body>
 </html>
