@@ -8,7 +8,78 @@
       <h2>A quick script to pull links from Tumblr</h2>
       <p>I use Tumblr as a linkblog: <a href="https://kittell.tumblr.com">kittell.tumblr.com</a>. Read an article or listen to a radio show (a "Pod Cast"), then throw the link to it up there&mdash;for what reason, I'm not sure. Probably just <a href="2026-01-09.html#2026-01-09_01">note hoarding</a>. What if the though slips away, etc.</p>
       <p>Anyway, they're there, and I'll scroll back through the list and grab a few article/show links for the <a href="newsletter">newsletter</a>. I've always wanted to make something that will go back and manage the links for me, plus the notes that about the article that I keep in Instapaper or OneNote (or Evernote, that's how long I've been thinking about it, I haven't used that service in years, thanks private equity). There's no need for that either, just a fun project to see how things work.</p>
-      <p>So here's a quick something that goes to Tumblr, finds links I've posted, and brings them back. It doesn't do anything interesting with them. Step one is just getting them.</p>
+      <p>So here's a quick something (<a href="attachments/2026-01-29/tumblr_2026-01-29.py">tumblr_2026-01-29.py</a>) that goes to Tumblr, finds links I've posted along with the post ID and timestamp, and brings them back. It doesn't do anything interesting with them. Step one is just getting them. It was all fairly straightforward if you look at the response except for the <a href="https://www.tumblr.com/docs/npf">Neue Post Format</a> info in the body, which is more JSON info packed into a string.</p>
+      <code>
+        <p>import requests
+        <br />import json
+        <br />import html
+        <br />from pathlib import Path
+        <br />from bs4 import BeautifulSoup</p>
+
+        <br />BLOG_IDENTIFIER = "kittell.tumblr.com"
+        <br />LIMIT = 10</p>
+
+        <p>def load_tumblr_keys():
+            <br />&nbsp;&nbsp;# Retrieve API keys from a separate location from code
+            </p>
+            
+            <p>&nbsp;&nbsp;# Cross-platform home directory
+            <br />&nbsp;&nbsp;home = Path.home()</p>
+
+            <p>&nbsp;&nbsp;# Shared subpath on both Mac and PC
+            <br />&nbsp;&nbsp;keyfile = home / "OneDrive" / "Programs" / "tumblr" / "tumblr_api_keys.json"</p>
+
+            <p>&nbsp;&nbsp;with open(keyfile, "r") as f:
+                <br />&nbsp;&nbsp;&nbsp;&nbsp;return json.load(f)</p>
+
+        <p>def get_posts(keys):
+            <br />&nbsp;&nbsp;url = f"https://api.tumblr.com/v2/blog/{BLOG_IDENTIFIER}/posts/link"
+            <br />&nbsp;&nbsp;params = {
+                <br />&nbsp;&nbsp;&nbsp;&nbsp;"api_key": keys['consumer_key'],
+                <br />&nbsp;&nbsp;&nbsp;&nbsp;"limit": LIMIT
+            <br />&nbsp;&nbsp;}</p>
+
+            <p>&nbsp;&nbsp;response = requests.get(url, params=params)
+            <br />&nbsp;&nbsp;data = response.json()
+            <br />&nbsp;&nbsp;posts = data["response"]["posts"]</p>
+
+            <p>&nbsp;&nbsp;return posts
+
+        <p>def get_npfdata_from_body(body):
+            <br />&nbsp;&nbsp;soup = BeautifulSoup(body, 'html.parser')</p>
+
+            <p>&nbsp;&nbsp;# Step 1: extract the attribute
+            <br />&nbsp;&nbsp;raw = soup.p["data-npf"]</p>
+
+            <p>&nbsp;&nbsp;# Step 2: unescape HTML entities (&quot; → ")
+            <br />&nbsp;&nbsp;unescaped = html.unescape(raw)</p>
+
+            <p>&nbsp;&nbsp;# Step 3: parse JSON
+            <br />&nbsp;&nbsp;npf_data = json.loads(unescaped)</p>
+
+            <p>&nbsp;&nbsp;return npf_data</p>
+
+        <p>if __name__ == "__main__":
+            <br />&nbsp;&nbsp;keys = load_tumblr_keys()
+            <br />&nbsp;&nbsp;posts = get_posts(keys)
+            <br />&nbsp;&nbsp;for post in posts:
+                <br />&nbsp;&nbsp;&nbsp;&nbsp;npf_data = get_npfdata_from_body(post['body'])
+                <br />&nbsp;&nbsp;&nbsp;&nbsp;print(f'{post['id']}, {post['date']}, {npf_data['url']}')</p>
+
+      </code>
+      <p>From that, I get:</p>
+      <code>
+        <p>806946606212644864, 2026-01-28 01:37:33 GMT, https://www.stlpr.org/economy-business/2026-01-26/facing-insurmountable-challenges-alton-steel-will-close-doors
+        <br />806809748378943488, 2026-01-26 13:22:15 GMT, https://sixsongs.blogspot.com/2008/12/winter-wonderland-snowin-on-raton.html
+        <br />806809201947115520, 2026-01-26 13:13:34 GMT, https://www.npr.org/2012/01/02/144587802/winter-songs-van-zandts-snowin-on-raton
+        <br />806735156158316544, 2026-01-25 17:36:38 GMT, https://www.nytimes.com/interactive/2026/01/23/weather/winter-storm-snow-maps.html
+        <br />806581104350986240, 2026-01-24 00:48:03 GMT, https://timkreider.substack.com/p/the-least-merry-prankster?utm_source=substack&utm_medium=email
+        <br />806411463256309762, 2026-01-22 03:51:40 GMT, https://www.agriculture.com/precision-planting-unveils-arrowtube-to-improve-corn-emergence-uniformity-11889368
+        <br />806397347786588160, 2026-01-22 00:07:19 GMT, https://www.garbageday.email/p/am-i-too-stupid-to-vibe-code
+        <br />806215875766157312, 2026-01-20 00:02:54 GMT, https://github.blog/ai-and-ml/generative-ai/what-ai-is-actually-good-for-according-to-developers/
+        <br />806215594342072320, 2026-01-19 23:58:25 GMT, https://www.npr.org/2026/01/15/nx-s1-5611117/beat-anxiety-insomnia-get-back-to-sleep
+        <br />806215385008537600, 2026-01-19 23:55:06 GMT, https://arstechnica.com/information-technology/2026/01/10-things-i-learned-from-burning-myself-out-with-ai-coding-agents/</p>
+      </code>
     </article>
   </body>
 </html>

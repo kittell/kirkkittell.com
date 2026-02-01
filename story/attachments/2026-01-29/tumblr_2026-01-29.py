@@ -4,12 +4,13 @@ import html
 from pathlib import Path
 from bs4 import BeautifulSoup
 
-API_KEY = "YOUR_API_KEY"  # register at https://www.tumblr.com/oauth/apps
 BLOG_IDENTIFIER = "kittell.tumblr.com"
 LIMIT = 10
 
 def load_tumblr_keys():
-    # Cross‑platform home directory
+    # Retrieve API keys from a separate location from code
+
+    # Cross-platform home directory
     home = Path.home()
 
     # Shared subpath on both Mac and PC
@@ -51,4 +52,4 @@ if __name__ == "__main__":
     posts = get_posts(keys)
     for post in posts:
         npf_data = get_npfdata_from_body(post['body'])
-        print(npf_data['url'])
+        print(f'{post['id']}, {post['date']}, {npf_data['url']}')
