@@ -6,7 +6,131 @@
     <link>https://www.kirkkittell.com/</link>
     <description>kirkkittell.com</description>
     <language>en-us</language>
-    <lastBuildDate>Mon, 02 Jan 2026 08:00:00 CST</lastBuildDate>
+    <lastBuildDate>Fri, 06 Feb 2026 21:37:00 CST</lastBuildDate>
+
+    <item>
+      <title>A quick script to pull links from Instapaper</title>
+      <link>https://www.kirkkittell.com/story/2026-02-06.html#2026-02-06_01</link>
+      <guid>https://www.kirkkittell.com/story/2026-02-06.html#2026-02-06_01</guid>
+      <pubDate>Fri, 06 Feb 2026 21:37:00 CST</pubDate>
+      <content:encoded><![CDATA[
+      <p>Moving on from <a href="2026-01-29.html">pulling links from Tumblr</a>, where I fling links for any articles I read...</p>
+
+      <p>I also put links of articles to read later in <a href="https://www.instapaper.com">Instapaper</a>. Somewhere I've got a post about how I use Instapaper, but I haven't excavated and reposted it yet. In short: Instapaper is nice because you can post a link to an article that you think you want to read now, but then not read it, and come back to it later and decide if you actually want to read it. Sounds silly, but gets around whatever impulse that is for reading junky super NOW articles about whatever's in the news&mdash;the sort of stuff that's often primed for Engagement moreso than Information.</p>
+
+      <p>Instapaper is also nice because it feels like an old(-ish) school internet tool that is useful without being flashy or pushy or annoying. It does what it does, and does it well.</p>
+
+      <p>In the back of my mind, I have this idea of building out a knowledge graph based on the things I read. I try to keep it in the back of my mind because I'd rather spend the time in the real world and not spend so much time making interesting but useless toys. Tumblr as a link blog and Instapaper as a place to capture article text and highlights are two aspects of that graph. Another would be the notes I have in OneNote. Another might be the feeds I subscribe to in Feedly (say, see which articles I've read, but have or have not subscribed to the RSS feed). Each artifact (which could be described by any number of the previously named things) might relate to another artifact as a citation or link or reference or author or whatever.</p>
+
+      <p>Where do ideas come from? Where do they go? Just something that's been banging around in my head, especially at work where there is some messy progression of results begetting ideas begetting results, and so on and so on.</p>
+
+      <p>Anyway. In the meanwhile, here's a quick <a href="attachments/2026-02-06/instapaper_2026-02-06.py">python script</a> that grabs articles from the "archived" folder in Instapaper.</p>
+      
+      <code>
+        <p>import json
+        <br />from pathlib import Path
+        <br />from requests_oauthlib import OAuth1Session
+        </p>
+
+        <p>def load_keys():
+        <br />&nbsp;&nbsp;&nbsp;&nbsp;# Retrieve API keys from a separate location from code
+        </p>
+
+        <p>&nbsp;&nbsp;&nbsp;&nbsp;# Cross-platform home directory
+        <br />&nbsp;&nbsp;&nbsp;&nbsp;home = Path.home()
+        </p>
+
+        <p>&nbsp;&nbsp;&nbsp;&nbsp;# Shared subpath on both Mac and PC
+        <br />&nbsp;&nbsp;&nbsp;&nbsp;keyfile = home / 'OneDrive' / 'Programs' / 'instapaper' / 'instapaper_api_keys.json'
+        </p>
+
+        <p>&nbsp;&nbsp;&nbsp;&nbsp;with open(keyfile, 'r') as f:
+        <br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return json.load(f)
+        </p>
+
+        <p>def get_oauth_token(keys):
+        <br />&nbsp;&nbsp;&nbsp;&nbsp;# Step 1: Get an OAuth access token via xAuth
+        <br />&nbsp;&nbsp;&nbsp;&nbsp;oauth = OAuth1Session(keys['consumer_id'], client_secret=keys['consumer_secret'])
+        </p>
+
+        <p>&nbsp;&nbsp;&nbsp;&nbsp;response = oauth.post(
+        <br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'https://www.instapaper.com/api/1/oauth/access_token',
+        <br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;data={
+        <br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'x_auth_username': keys['username'],
+        <br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'x_auth_password': keys['password'],
+        <br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'x_auth_mode': 'client_auth',
+        <br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
+        <br />&nbsp;&nbsp;&nbsp;&nbsp;)
+        </p>
+
+        <p>&nbsp;&nbsp;&nbsp;&nbsp;if response.status_code != 200:
+        <br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;raise Exception('xAuth failed: ' + response.text)
+        </p>
+
+        <p>&nbsp;&nbsp;&nbsp;&nbsp;# Parse token + secret
+        <br />&nbsp;&nbsp;&nbsp;&nbsp;token_data = dict(item.split('=') for item in response.text.split('&'))
+        </p>
+
+        <p>&nbsp;&nbsp;&nbsp;&nbsp;print('Authenticated!')
+        <br />&nbsp;&nbsp;&nbsp;&nbsp;return token_data
+        </p>
+
+        <p>def get_auth(api_keys, oauth_token):
+        <br />&nbsp;&nbsp;&nbsp;&nbsp;auth = OAuth1Session(
+        <br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;api_keys['consumer_id'],
+        <br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;client_secret=api_keys['consumer_secret'],
+        <br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;resource_owner_key=oauth_token['oauth_token'],
+        <br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;resource_owner_secret=oauth_token['oauth_token_secret']
+        <br />&nbsp;&nbsp;&nbsp;&nbsp;)
+        <br />&nbsp;&nbsp;&nbsp;&nbsp;return auth
+        </p>
+
+        <p>def fetch_bookmarks(api_keys, oauth_token, limit, folder_id=None):
+        <br />&nbsp;&nbsp;&nbsp;&nbsp;auth = get_auth(api_keys, oauth_token)
+        <br />&nbsp;&nbsp;&nbsp;&nbsp;resp = auth.post(
+        <br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'https://www.instapaper.com/api/1/bookmarks/list',
+        <br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;data={
+        <br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'folder_id': folder_id,
+        <br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'limit': limit
+        <br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
+        <br />&nbsp;&nbsp;&nbsp;&nbsp;)
+        </p>
+
+        <p>&nbsp;&nbsp;&nbsp;&nbsp;resp_json = resp.json()
+        <br />&nbsp;&nbsp;&nbsp;&nbsp;bookmarks = []
+        <br />&nbsp;&nbsp;&nbsp;&nbsp;for item in resp_json:
+        <br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if item.get('type') == 'bookmark':
+        <br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;bookmarks.append(item)
+        </p>
+
+        <p>&nbsp;&nbsp;&nbsp;&nbsp;return bookmarks
+        </p>
+
+        <p>if __name__ == '__main__':
+        <br />&nbsp;&nbsp;&nbsp;&nbsp;api_keys = load_keys()
+        <br />&nbsp;&nbsp;&nbsp;&nbsp;oauth_token = get_oauth_token(api_keys)
+        <br />&nbsp;&nbsp;&nbsp;&nbsp;bookmarks = fetch_bookmarks(api_keys, oauth_token, limit=10, folder_id='archive')
+        <br />&nbsp;&nbsp;&nbsp;&nbsp;for b in bookmarks:
+        <br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;print(f"{b['bookmark_id']}, {b['url']}, {b['title']}, {b['time']}")
+      </code>
+
+      <p>That returns something like:</p>
+
+      <code>
+        <p>1622499199, https://www.newyorker.com/magazine/2020/12/14/the-skeletons-at-the-lake, The Skeletons at the Lake, 1770208605
+        <br />1967077764, https://www.nytimes.com/2026/01/25/business/mississippi-delta-farmers-rice-prices.html, Hard Times in the Delta as Farmers Consider Letting Crops Rot, 1769352919
+        <br />1967026977, https://www.polygon.com/brian-graden-south-park-interview-matt-stone-trey-parker-donald-trump/, 29 years later, the Hollywood producer behind South Park weighs in on its anti-Trump season, 1769345761
+        <br />1958813273, https://www.theatlantic.com/ideas/2025/12/death-college-football-bowl-playoff/685454/, The Slow, Inevitable Death of the Bowl Game, 1768142163
+        <br />1950813592, https://fortune.com/2025/12/25/cursor-ceo-michael-truell-vibe-coding-warning-generative-ai-assistant/, Cursor CEO warns vibe coding builds 'shaky foundations' and eventually 'things start to crumble’ | Fortune, 1766773591
+        <br />1941006954, https://www.theringer.com/2025/11/19/tv/tv-show-coaching-trees-ranking, Which TV Show Has the Best Coaching Tree?, 1765686843      
+        <br />1860930300, https://english.elpais.com/culture/2025-07-20/the-bewildering-phenomenon-of-declining-quality.html, The bewildering phenomenon of declining quality, 1765190737
+        <br />1939289925, https://www.salon.com/2001/09/24/cobain/, Kurt Cobain and a dream about pop - Salon.com, 1765170576
+        <br />1630731970, https://slate.com/business/2023/08/sleeper-car-trains-trend-travel.html, The Bliss of Being There by Morning, 1764900144
+        <br />1634972476, https://www.thecut.com/article/erykah-badu-profile.html, A Four-Hour Phone Call With Erykah Badu, 1764872740</p>
+      </code>
+
+      ]]></content:encoded>
+    </item>
 
     <item>
       <title>30 km in, 30 km out</title>
