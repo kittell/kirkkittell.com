@@ -20,51 +20,51 @@
         <br />LIMIT = 10</p>
 
         <p>def load_tumblr_keys():
-            <br />&nbsp;&nbsp;# Retrieve API keys from a separate location from code
+            <br />&nbsp;&nbsp;&nbsp;&nbsp;# Retrieve API keys from a separate location from code
             </p>
             
-            <p>&nbsp;&nbsp;# Cross-platform home directory
-            <br />&nbsp;&nbsp;home = Path.home()</p>
+            <p>&nbsp;&nbsp;&nbsp;&nbsp;# Cross-platform home directory
+            <br />&nbsp;&nbsp;&nbsp;&nbsp;home = Path.home()</p>
 
-            <p>&nbsp;&nbsp;# Shared subpath on both Mac and PC
-            <br />&nbsp;&nbsp;keyfile = home / "OneDrive" / "Programs" / "tumblr" / "tumblr_api_keys.json"</p>
+            <p>&nbsp;&nbsp;&nbsp;&nbsp;# Shared subpath on both Mac and PC
+            <br />&nbsp;&nbsp;&nbsp;&nbsp;keyfile = home / "OneDrive" / "Programs" / "tumblr" / "tumblr_api_keys.json"</p>
 
-            <p>&nbsp;&nbsp;with open(keyfile, "r") as f:
-                <br />&nbsp;&nbsp;&nbsp;&nbsp;return json.load(f)</p>
+            <p>&nbsp;&nbsp;&nbsp;&nbsp;with open(keyfile, "r") as f:
+                <br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return json.load(f)</p>
 
         <p>def get_posts(keys):
-            <br />&nbsp;&nbsp;url = f"https://api.tumblr.com/v2/blog/{BLOG_IDENTIFIER}/posts/link"
-            <br />&nbsp;&nbsp;params = {
-                <br />&nbsp;&nbsp;&nbsp;&nbsp;"api_key": keys['consumer_key'],
-                <br />&nbsp;&nbsp;&nbsp;&nbsp;"limit": LIMIT
-            <br />&nbsp;&nbsp;}</p>
+            <br />&nbsp;&nbsp;&nbsp;&nbsp;url = f"https://api.tumblr.com/v2/blog/{BLOG_IDENTIFIER}/posts/link"
+            <br />&nbsp;&nbsp;&nbsp;&nbsp;params = {
+                <br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"api_key": keys['consumer_key'],
+                <br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"limit": LIMIT
+            <br />&nbsp;&nbsp;&nbsp;&nbsp;}</p>
 
-            <p>&nbsp;&nbsp;response = requests.get(url, params=params)
-            <br />&nbsp;&nbsp;data = response.json()
-            <br />&nbsp;&nbsp;posts = data["response"]["posts"]</p>
+            <p>&nbsp;&nbsp;&nbsp;&nbsp;response = requests.get(url, params=params)
+            <br />&nbsp;&nbsp;&nbsp;&nbsp;data = response.json()
+            <br />&nbsp;&nbsp;&nbsp;&nbsp;posts = data["response"]["posts"]</p>
 
-            <p>&nbsp;&nbsp;return posts
+            <p>&nbsp;&nbsp;&nbsp;&nbsp;return posts
 
         <p>def get_npfdata_from_body(body):
-            <br />&nbsp;&nbsp;soup = BeautifulSoup(body, 'html.parser')</p>
+            <br />&nbsp;&nbsp;&nbsp;&nbsp;soup = BeautifulSoup(body, 'html.parser')</p>
 
-            <p>&nbsp;&nbsp;# Step 1: extract the attribute
-            <br />&nbsp;&nbsp;raw = soup.p["data-npf"]</p>
+            <p>&nbsp;&nbsp;&nbsp;&nbsp;# Step 1: extract the attribute
+            <br />&nbsp;&nbsp;&nbsp;&nbsp;raw = soup.p["data-npf"]</p>
 
-            <p>&nbsp;&nbsp;# Step 2: unescape HTML entities (&quot; → ")
-            <br />&nbsp;&nbsp;unescaped = html.unescape(raw)</p>
+            <p>&nbsp;&nbsp;&nbsp;&nbsp;# Step 2: unescape HTML entities (&quot; → ")
+            <br />&nbsp;&nbsp;&nbsp;&nbsp;unescaped = html.unescape(raw)</p>
 
-            <p>&nbsp;&nbsp;# Step 3: parse JSON
-            <br />&nbsp;&nbsp;npf_data = json.loads(unescaped)</p>
+            <p>&nbsp;&nbsp;&nbsp;&nbsp;# Step 3: parse JSON
+            <br />&nbsp;&nbsp;&nbsp;&nbsp;npf_data = json.loads(unescaped)</p>
 
-            <p>&nbsp;&nbsp;return npf_data</p>
+            <p>&nbsp;&nbsp;&nbsp;&nbsp;return npf_data</p>
 
         <p>if __name__ == "__main__":
-            <br />&nbsp;&nbsp;keys = load_tumblr_keys()
-            <br />&nbsp;&nbsp;posts = get_posts(keys)
-            <br />&nbsp;&nbsp;for post in posts:
-                <br />&nbsp;&nbsp;&nbsp;&nbsp;npf_data = get_npfdata_from_body(post['body'])
-                <br />&nbsp;&nbsp;&nbsp;&nbsp;print(f'{post['id']}, {post['date']}, {npf_data['url']}')</p>
+            <br />&nbsp;&nbsp;&nbsp;&nbsp;keys = load_tumblr_keys()
+            <br />&nbsp;&nbsp;&nbsp;&nbsp;posts = get_posts(keys)
+            <br />&nbsp;&nbsp;&nbsp;&nbsp;for post in posts:
+                <br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;npf_data = get_npfdata_from_body(post['body'])
+                <br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;print(f'{post['id']}, {post['date']}, {npf_data['url']}')</p>
 
       </code>
       <p>From that, I get:</p>
