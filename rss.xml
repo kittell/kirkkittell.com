@@ -6,7 +6,17 @@
     <link>https://www.kirkkittell.com/</link>
     <description>kirkkittell.com</description>
     <language>en-us</language>
-    <lastBuildDate>Fri, 06 Feb 2026 21:37:00 CST</lastBuildDate>
+    <lastBuildDate>Fri, 20 Feb 2026 07:06:00 CST</lastBuildDate>
+
+    <item>
+      <title>The Captain's Newsletter: 2026-003</title>
+      <link>https://www.kirkkittell.com/story/2026-02-11.html#2026-02-11_01</link>
+      <guid>https://www.kirkkittell.com/story/2026-02-11.html#2026-02-11_01</guid>
+      <pubDate>Wed, 11 Jan 2026 08:00:00 CST</pubDate>
+      <content:encoded><![CDATA[
+
+      ]]></content:encoded>
+    </item>
 
     <item>
       <title>A quick script to pull links from Instapaper</title>
