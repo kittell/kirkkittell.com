@@ -9,7 +9,13 @@
       <p>Reaching back to <a href="2026-02-06.html">6 February</a> and pulling information from the Instapaper API...</p>
       <p>There were immediately cracks in the approach of pulling information from other services where I keep references and notes: Feedly requires a paid subscription for API access (which is a fine approach, you've got to take in money somehow to keep the service running, and I've paid for Feedly before but shed that and other subscription costs over the years); Microsoft doesn't allow API access OneNote or most other services that use the Microsoft Graph API unless you've got a corporate account instead of a personal account; and Goodreads seems to not have an API at all anymore. So, that's that, for the most part for building a little tool that connects my notes into a graph based on live online data.</p>
       <p>There appear to be some Plan B approaches available for Feedly, OneNote, and Goodreads based on exports, though. The export from Goodreads is thorough enough to work with; example: <a href="attachments/2026-02-25/goodreads_library_export_2026-02-12.csv">goodreads_library_export_2026-02-12.csv</a>.</p>
-      <p>All I want (for now) is a way to spin the wheel and get a book recommendation based on books I've already added to my "To Read" shelf.</p>
+      <p>All I want (for now) is a way to spin the wheel and get a book recommendation based on books I've already added to my "To Read" shelf. This code is a quick first shot at it: <a href="attachments/2026-02-25/goodreads_2026-02-25.py">goodreads_2026-02-25.py</a>.</p>
+      <p>It returns a simple output:</p>
+      <pre>Leonardo's Notebooks
+Waiting on a Train: The Embattled Future of Passenger Rail Service A Year Spent Riding Across America
+The Person and the Situation: Perspectives of Social Psychology
+William Mulholland and the Rise of Los Angeles</pre>
+      <p>Eventually I might clot it up with something like choosing a random fiction vs non-fiction book (and maybe finding which books aren't labeled fiction or non-fiction back in Goodreads), books from a certain year range, authors whose last name starts with a certain letter, etc.&mdash;anything to make it more complicated.</p>
     </article>
   </body>
 </html>
