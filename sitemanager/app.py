@@ -1,4 +1,4 @@
-from story import StoryManager
+from .story import StoryManager
 
 class Application:
     _name = 'Site Manager'
