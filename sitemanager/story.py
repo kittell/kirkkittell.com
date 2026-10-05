@@ -10,7 +10,7 @@ from typing import List
 class StoryManager:
     '''Maintain list of stories and their metadata
     '''
-    def __init__(self):
+    def __init__(self) -> None:
         self.dir_program = Path(__file__).resolve().parent.parent
         self.dir_story = os.path.join(self.dir_program, 'story')
         self.dir_markdown = os.path.join(self.dir_story, 'markdown')
@@ -21,10 +21,6 @@ class StoryManager:
 
         self.story_list: List[str] = self.get_file_list(self.dir_story)
         self.markdown_list: List[str] = self.get_file_list(self.dir_markdown)
-
-        # TEMP
-        self.convert_all_markdown_files()
-        self.pack_story_html()
         
         return
     
@@ -40,8 +36,8 @@ class StoryManager:
 
         return file_list
     
-    def convert_all_markdown_files(self):
-        '''Convert markdown files to html
+    def convert_all_markdown_files(self) -> None:
+        '''Convert all markdown files in list to html
         '''
         for md in self.markdown_list:
             self.convert_markdown_html(md)
@@ -49,6 +45,8 @@ class StoryManager:
         return
     
     def convert_markdown_html(self, md_path: str) -> None:
+        '''Convert a single markdown file to html and save it
+        '''
         with open(md_path, 'r') as f:
             md_text = f.read()
             html = markdown.markdown(md_text)
@@ -61,15 +59,12 @@ class StoryManager:
                 f_html.write(html)
 
         return
-    
-    def pack_story_html(self):
-        return
 
 
 class Story:
     '''An individual story (post to the site)
     '''
-    def __init__(self):
+    def __init__(self) -> None:
         self.attachments: List[str] = []
         self.dt: str 
         self.prev: str = ''
